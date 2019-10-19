@@ -24,7 +24,7 @@
 - 编辑用户
 - 删除客户
 
-**2. 设计表结构 **
+**2. 设计表结构**
 
 | 字段名| 数据类型 |  是否非空| 字段描述|
 | --- | --- | --- | --- |
@@ -35,6 +35,21 @@
 | email| VARCHAR(255) |  - | 邮箱地址|
 | rmark| TEXT |  - | 备注|
 
-** 设计界面原型 **
+**3. 设计界面原型**
 
 ![用户管理](./assert/manage.png)
+
+![查看管理](./assert/scan.png)
+
+**4. 设计URL**
+
+| 序号| URL | 描述| 
+| --- | --- | --- |
+| 1 | GET：/customer | 进入“客户列表”界面 |
+|  2| POST:/customer_search | 查询客户 |
+| 3 | GET:/customer_show?id={id} | 进入“查看客户”界面 |
+| 4 | GET:/customer_create | 进入“创建客户”界面 |
+| 5 | POST:/customer_create | 创建客户 |
+| 6 | GET:/customer_edit?id={id} | 进入“编辑客户”界面 |
+| 7 |  PUT:/customer_edit?id={id}|  编辑客户|
+| 8 | DELETE:/customer_delete?id={id} | 删除客户 |
