@@ -17,7 +17,7 @@ import java.util.Properties;
  * @create 2019-10-20-20:41
  * @since JDK 1.8
  */
-public class PropsUtil {
+public final class PropsUtil {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PropsUtil.class);
 
@@ -95,7 +95,7 @@ public class PropsUtil {
 	private static int getInt(Properties properties, String key, int defaultValue) {
 		int value = defaultValue;
 		if (properties.containsKey(key)) {
-			value = Integer.parseInt(properties.getProperty(key));
+			value = CastUtil.castInt(properties.getProperty(key));
 		}
 		return value;
 	}
@@ -120,7 +120,7 @@ public class PropsUtil {
 	private static boolean getBoolean(Properties properties, String key, boolean defaultValue) {
 		boolean value = defaultValue;
 		if (properties.containsKey(key)) {
-			value = Boolean.parseBoolean(properties.getProperty(key));
+			value = CastUtil.castBoolean(properties.getProperty(key));
 		}
 		return value;
 	}
