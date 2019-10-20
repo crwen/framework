@@ -54,6 +54,8 @@
 | 7 |  PUT:/customer_edit?id={id}|  编辑客户|
 | 8 | DELETE:/customer_delete?id={id} | 删除客户 |
 
+## 2.2 动手开发Web应用
+
 ### 2.2.2 准备开发环境
     idea
     maven 
