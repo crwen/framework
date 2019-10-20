@@ -58,6 +58,20 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>5.1.47</version>
     </dependency>
+
+    <!-- Apache Commons Lang-->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.3.2</version>
+    </dependency>
+    <!-- Apach Commons Collections -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.0</version>
+    </dependency>
+
   </dependencies>
 
   <build>
