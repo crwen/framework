@@ -63,7 +63,7 @@ public class CustomerService {
 	 * @param id
 	 * @return
 	 */
-	private boolean deleteCustomer(long id) {
+	public boolean deleteCustomer(long id) {
 		//TODO
 		return false;
 	}
