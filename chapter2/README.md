@@ -53,3 +53,9 @@
 | 6 | GET:/customer_edit?id={id} | 进入“编辑客户”界面 |
 | 7 |  PUT:/customer_edit?id={id}|  编辑客户|
 | 8 | DELETE:/customer_delete?id={id} | 删除客户 |
+
+### 2.2.2 准备开发环境
+    idea
+    maven 
+    
+### 2.2.3 编写模型层
