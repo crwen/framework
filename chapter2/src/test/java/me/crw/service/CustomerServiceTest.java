@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class CustomerServiceTest {
 
-	private final CustomerService customerService;
+	private  CustomerService customerService;
 
 	public CustomerServiceTest() {
 		customerService = new CustomerService();
@@ -36,6 +36,9 @@ public class CustomerServiceTest {
 		List<Customer> customerList = customerService.getCustomerList("");
 		//Assert.assertEquals(2, customerList.size());
 		Assert.assertNotEquals(0, customerList.size());
+		for (Customer customer : customerList) {
+			System.out.println(customer);
+		}
 	}
 
 	@Test

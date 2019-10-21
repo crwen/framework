@@ -88,4 +88,7 @@ public class Customer {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+
+
+
 }
