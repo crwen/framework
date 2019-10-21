@@ -1,15 +1,18 @@
 package me.crw.service;
 
+import me.crw.helper.DatabaseHelper;
 import me.crw.model.Customer;
 import me.crw.utils.PropsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * ClassName: CustomerService
@@ -24,24 +27,6 @@ import java.util.Properties;
 public class CustomerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PropsUtil.class);
-	private static final String DRIVER;
-	private static final String URL;
-	private static final String USERNAME;
-	private static final String PASSWORD;
-
-	static {
-		Properties conf = PropsUtil.loadProps("config.properties");
-		DRIVER = conf.getProperty("jdbc.driver");
-		URL = conf.getProperty("jdbc.url");
-		USERNAME = conf.getProperty("jdbc.username");
-		PASSWORD = conf.getProperty("jdbc.password");
-
-		try {
-			Class.forName(DRIVER);
-		} catch (ClassNotFoundException e) {
-			LOGGER.error("can not load jdbc driver", e);
-		}
-	}
 
 	/**
 	 * 根据关键词获取客户列表
@@ -53,7 +38,7 @@ public class CustomerService {
 		try {
 			List<Customer> customerList = new ArrayList<>();
 			String sql = "SELECT * FROM customer";
-			connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			connection = DatabaseHelper.getConnection();
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -70,13 +55,7 @@ public class CustomerService {
 		} catch (SQLException e) {
 			LOGGER.error("execute sql failure", e);
 		} finally {
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					LOGGER.error("close connection failure", e);
-				}
-			}
+			DatabaseHelper.closeConnection(connection);
 		}
 		//TODO
 		return null;
