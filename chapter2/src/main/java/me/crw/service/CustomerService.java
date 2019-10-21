@@ -7,9 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,26 +36,23 @@ public class CustomerService {
 			List<Customer> customerList = new ArrayList<>();
 			String sql = "SELECT * FROM customer";
 			connection = DatabaseHelper.getConnection();
-			PreparedStatement stmt = connection.prepareStatement(sql);
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				Customer customer = new Customer();
-				customer.setId(rs.getLong("id"));
-				customer.setName(rs.getString("name"));
-				customer.setContact(rs.getString("contact"));
-				customer.setTelephone(rs.getString("telephone"));
-				customer.setEmail(rs.getString("email"));
-				customer.setRemark(rs.getString("remark"));
-				customerList.add(customer);
-			}
+			//PreparedStatement stmt = connection.prepareStatement(sql);
+			//ResultSet rs = stmt.executeQuery();
+			//while (rs.next()) {
+			//	Customer customer = new Customer();
+			//	customer.setId(rs.getLong("id"));
+			//	customer.setName(rs.getString("name"));
+			//	customer.setContact(rs.getString("contact"));
+			//	customer.setTelephone(rs.getString("telephone"));
+			//	customer.setEmail(rs.getString("email"));
+			//	customer.setRemark(rs.getString("remark"));
+			//	customerList.add(customer);
+			//}
+			customerList = DatabaseHelper.queryEntityList(Customer.class, connection, sql);
 			return customerList;
-		} catch (SQLException e) {
-			LOGGER.error("execute sql failure", e);
 		} finally {
 			DatabaseHelper.closeConnection(connection);
 		}
-		//TODO
-		return null;
 	}
 
 	/**
