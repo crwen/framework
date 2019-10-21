@@ -27,6 +27,8 @@ public final class DatabaseHelper {
 
 	private static final QueryRunner QUERY_RUNNER = new QueryRunner();
 
+	private static final ThreadLocal<Connection> CONNECTION_HOLDER = new ThreadLocal<Connection>();
+
 	private static final String DRIVER;
 	private static final String URL;
 	private static final String USERNAME;
@@ -51,11 +53,13 @@ public final class DatabaseHelper {
 	 * @return
 	 */
 	public static Connection getConnection() {
-		Connection conn = null;
+		Connection conn = CONNECTION_HOLDER.get();
 		try {
 			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 		} catch (SQLException e) {
 			LOGGER.error("execute sql failure", e);
+		} finally {
+			CONNECTION_HOLDER.set(conn);
 		}
 
 		return conn;
@@ -63,14 +67,17 @@ public final class DatabaseHelper {
 
 	/**
 	 * 关闭数据库连接
-	 * @param connection
 	 */
-	public static void closeConnection(Connection connection) {
-		if (connection != null) {
+	public static void closeConnection() {
+		Connection conn = CONNECTION_HOLDER.get();
+		if (conn != null) {
 			try {
-				connection.close();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.error("close connection failure", e);
+				throw new RuntimeException(e);
+			} finally {
+				CONNECTION_HOLDER.remove();
 			}
 		}
 	}
@@ -78,21 +85,21 @@ public final class DatabaseHelper {
 	/**
 	 * 查询实体列表
 	 * @param entityClass
-	 * @param conn
 	 * @param sql
 	 * @param params
 	 * @param <T>
 	 * @return
 	 */
-	public static <T>List<T> queryEntityList(Class<T> entityClass, Connection conn, String sql, Object ... params) {
+	public static <T>List<T> queryEntityList(Class<T> entityClass , String sql, Object ... params) {
 		List<T> entityList;
 		try {
+			Connection conn = getConnection();
 			entityList = QUERY_RUNNER.query(conn, sql, new BeanListHandler<T>(entityClass), params);
 		} catch (SQLException e) {
 			LOGGER.error("query entity list failure", e);
 			throw new RuntimeException(e);
 		} finally {
-			closeConnection(conn);
+			closeConnection();
 		}
 		return entityList;
 	}

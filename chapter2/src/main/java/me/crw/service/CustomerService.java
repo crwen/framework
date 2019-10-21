@@ -35,7 +35,7 @@ public class CustomerService {
 		try {
 			List<Customer> customerList = new ArrayList<>();
 			String sql = "SELECT * FROM customer";
-			connection = DatabaseHelper.getConnection();
+			//connection = DatabaseHelper.getConnection();
 			//PreparedStatement stmt = connection.prepareStatement(sql);
 			//ResultSet rs = stmt.executeQuery();
 			//while (rs.next()) {
@@ -48,10 +48,10 @@ public class CustomerService {
 			//	customer.setRemark(rs.getString("remark"));
 			//	customerList.add(customer);
 			//}
-			customerList = DatabaseHelper.queryEntityList(Customer.class, connection, sql);
+			customerList = DatabaseHelper.queryEntityList(Customer.class, sql);
 			return customerList;
 		} finally {
-			DatabaseHelper.closeConnection(connection);
+			DatabaseHelper.closeConnection();
 		}
 	}
 
