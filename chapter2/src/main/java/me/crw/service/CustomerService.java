@@ -6,7 +6,6 @@ import me.crw.utils.PropsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ public class CustomerService {
 	 * @return
 	 */
 	public List<Customer> getCustomerList(String keyword) {
-		Connection connection = null;
+		//Connection connection = null;
 
 		List<Customer> customerList = new ArrayList<>();
 		String sql = "SELECT * FROM customer";
@@ -54,6 +53,16 @@ public class CustomerService {
 		//finally {
 		//	DatabaseHelper.closeConnection();
 		//}
+	}
+
+	public List<Customer> getCustomerList() {
+		//Connection connection = null;
+
+		List<Customer> customerList = new ArrayList<>();
+		String sql = "SELECT * FROM customer";
+
+		customerList = DatabaseHelper.queryEntityList(Customer.class, sql);
+		return customerList;
 	}
 
 	/**
