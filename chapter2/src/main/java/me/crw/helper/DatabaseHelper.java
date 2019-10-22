@@ -2,6 +2,7 @@ package me.crw.helper;
 
 import me.crw.utils.CollectionUtil;
 import me.crw.utils.PropsUtil;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -9,8 +10,11 @@ import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +38,8 @@ public final class DatabaseHelper {
 
 	private static final ThreadLocal<Connection> CONNECTION_HOLDER = new ThreadLocal<Connection>();
 
+	private static final BasicDataSource DATA_SOURCE;
+
 	private static final String DRIVER;
 	private static final String URL;
 	private static final String USERNAME;
@@ -46,10 +52,33 @@ public final class DatabaseHelper {
 		USERNAME = conf.getProperty("jdbc.username");
 		PASSWORD = conf.getProperty("jdbc.password");
 
+		DATA_SOURCE = new BasicDataSource();
+		DATA_SOURCE.setDriverClassName(DRIVER);
+		DATA_SOURCE.setUrl(URL);
+		DATA_SOURCE.setUsername(USERNAME);
+		DATA_SOURCE.setPassword(PASSWORD);
+		//try {
+		//	Class.forName(DRIVER);
+		//} catch (ClassNotFoundException e) {
+		//	LOGGER.error("can not load jdbc driver", e);
+		//}
+	}
+
+	/**
+	 * 执行sql文件
+	 * @param filePath
+	 */
+	public static void executeSqlFile(String filePath) {
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		try {
-			Class.forName(DRIVER);
-		} catch (ClassNotFoundException e) {
-			LOGGER.error("can not load jdbc driver", e);
+			String sql;
+			while ((sql = reader.readLine()) != null) {
+				executeUpdate(sql);
+			}
+		} catch (IOException e) {
+			LOGGER.error("execute sql file failure", e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -60,7 +89,8 @@ public final class DatabaseHelper {
 	public static Connection getConnection() {
 		Connection conn = CONNECTION_HOLDER.get();
 		try {
-			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			//conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			conn = DATA_SOURCE.getConnection();
 		} catch (SQLException e) {
 			LOGGER.error("execute sql failure", e);
 		} finally {
@@ -73,19 +103,19 @@ public final class DatabaseHelper {
 	/**
 	 * 关闭数据库连接
 	 */
-	public static void closeConnection() {
-		Connection conn = CONNECTION_HOLDER.get();
-		if (conn != null) {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				LOGGER.error("close connection failure", e);
-				throw new RuntimeException(e);
-			} finally {
-				CONNECTION_HOLDER.remove();
-			}
-		}
-	}
+	//public static void closeConnection() {
+	//	Connection conn = CONNECTION_HOLDER.get();
+	//	if (conn != null) {
+	//		try {
+	//			conn.close();
+	//		} catch (SQLException e) {
+	//			LOGGER.error("close connection failure", e);
+	//			throw new RuntimeException(e);
+	//		} finally {
+	//			CONNECTION_HOLDER.remove();
+	//		}
+	//	}
+	//}
 
 	/**
 	 * 查询实体列表
@@ -103,9 +133,10 @@ public final class DatabaseHelper {
 		} catch (SQLException e) {
 			LOGGER.error("query entity list failure", e);
 			throw new RuntimeException(e);
-		} finally {
-			closeConnection();
 		}
+		//} finally {
+		//	//closeConnection();
+		//}
 		return entityList;
 	}
 
@@ -125,9 +156,10 @@ public final class DatabaseHelper {
 		} catch (SQLException e) {
 			LOGGER.error("query entity failure", e);
 			throw new RuntimeException(e);
-		} finally {
-			closeConnection();
 		}
+		//} finally {
+		//	//closeConnection();
+		//}
 		return entity;
 	}
 
@@ -163,9 +195,10 @@ public final class DatabaseHelper {
 		} catch (SQLException e) {
 			LOGGER.error("execute update failure", e);
 			throw new RuntimeException(e);
-		} finally {
-			closeConnection();
 		}
+		//finally {
+		//	closeConnection();
+		//}
 		return rows;
 	}
 
@@ -183,7 +216,7 @@ public final class DatabaseHelper {
 
 		}
 
-		String sql = "INSERT INTO" + getTableName(entityClass);
+		String sql = "INSERT INTO " + getTableName(entityClass);
 		StringBuilder columns = new StringBuilder("(");
 		StringBuilder values = new StringBuilder("(");
 		for (String fieldName : fieldMap.keySet()) {

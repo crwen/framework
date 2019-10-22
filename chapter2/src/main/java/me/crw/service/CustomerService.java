@@ -32,9 +32,9 @@ public class CustomerService {
 	 */
 	public List<Customer> getCustomerList(String keyword) {
 		Connection connection = null;
-		try {
-			List<Customer> customerList = new ArrayList<>();
-			String sql = "SELECT * FROM customer";
+
+		List<Customer> customerList = new ArrayList<>();
+		String sql = "SELECT * FROM customer";
 			//connection = DatabaseHelper.getConnection();
 			//PreparedStatement stmt = connection.prepareStatement(sql);
 			//ResultSet rs = stmt.executeQuery();
@@ -48,11 +48,12 @@ public class CustomerService {
 			//	customer.setRemark(rs.getString("remark"));
 			//	customerList.add(customer);
 			//}
-			customerList = DatabaseHelper.queryEntityList(Customer.class, sql);
-			return customerList;
-		} finally {
-			DatabaseHelper.closeConnection();
-		}
+		customerList = DatabaseHelper.queryEntityList(Customer.class, sql);
+		return customerList;
+
+		//finally {
+		//	DatabaseHelper.closeConnection();
+		//}
 	}
 
 	/**
@@ -61,8 +62,10 @@ public class CustomerService {
 	 * @return
 	 */
 	public Customer getCustomer(long id) {
-		//TODO
-		return null;
+		String sql = "SELECT * FROM customer WHERE id=?";
+		Customer customer = DatabaseHelper.queryEntity(Customer.class, sql, id);
+
+		return customer;
 	}
 
 	/**

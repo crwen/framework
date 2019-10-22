@@ -1,10 +1,12 @@
 package me.crw.service;
 
+import me.crw.helper.DatabaseHelper;
 import me.crw.model.Customer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +29,16 @@ public class CustomerServiceTest {
 	}
 
 	@Before
-	public void init() {
+	public void init() throws IOException {
 		//TODO 初始化数据库
+		String file = "sql/customer_init.sql";
+		//InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
+		//BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		//String sql;
+		//while ((sql = reader.readLine()) != null) {
+		//	DatabaseHelper.executeUpdate(sql);
+		//}
+		DatabaseHelper.executeSqlFile(file);
 	}
 
 	@Test
@@ -45,6 +55,7 @@ public class CustomerServiceTest {
 	public void getCustomerTest() throws Exception {
 		long id = 1L;
 		Customer customer = customerService.getCustomer(id);
+		System.out.println(customer);
 		Assert.assertNotNull(customer);
 	}
 
