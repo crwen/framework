@@ -1,11 +1,16 @@
 package me.crw.controller;
 
+import me.crw.model.Customer;
+import me.crw.service.CustomerService;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ClassName: CustomerCreateServlet
@@ -19,6 +24,13 @@ import java.io.IOException;
 @WebServlet("/customer_create")
 public class CustomerCreateServlet extends HttpServlet {
 
+	private CustomerService customerService;
+
+	@Override
+	public void init() throws ServletException {
+		customerService = new CustomerService();
+	}
+
 	/**
 	 * 进入 创建客户 界面
 	 * @param req
@@ -28,7 +40,7 @@ public class CustomerCreateServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		//TODO
+		req.getRequestDispatcher("/WEB-INF/view/customer_create.jsp").forward(req, resp);
 	}
 
 	/**
@@ -40,6 +52,14 @@ public class CustomerCreateServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		//TODO
+		Customer customer = new Customer();
+		Map<String, Object> fieldMap = new HashMap<>();
+		fieldMap.put("name", req.getParameter("name"));
+		fieldMap.put("contact", req.getParameter("contact"));
+		fieldMap.put("telephone", req.getParameter("telephone"));
+		fieldMap.put("remark", req.getParameter("remark"));
+		boolean result = customerService.createCustomer(fieldMap);
+
+		resp.sendRedirect(req.getServletPath() + "/customer");
 	}
 }
