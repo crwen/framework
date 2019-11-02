@@ -49,7 +49,7 @@ public final class CastUtil {
 		double doubleValue = defaultValue;
 		if (obj != null) {
 			String strValue = castString((obj));
-			if (StringUtils.isNotEmpty(strValue)) {
+			if (StringUtil.isNotEmpty(strValue)) {
 				try {
 					doubleValue = Double.parseDouble(strValue);
 				} catch (NumberFormatException e) {

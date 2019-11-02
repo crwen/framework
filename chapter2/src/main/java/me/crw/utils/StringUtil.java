@@ -9,13 +9,13 @@ package me.crw.utils;
  * @create 2019-10-20-21:23
  * @since JDK 1.8
  */
-public final class StringUtils {
+public final class StringUtil {
 
 	public static boolean isEmpty(String str) {
 		if (str != null) {
 			str = str.trim();
 		}
-		return StringUtils.isEmpty(str);
+		return StringUtil.isEmpty(str);
 	}
 
 	public static boolean isNotEmpty(String str) {
