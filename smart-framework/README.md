@@ -133,3 +133,7 @@ public final class ConfigHelper {
 ```
 
 ## 3.5 开发一个类加载器
+&emsp;我们需要[自定义一个类加载器](https://github.com/crwen/framework/blob/master/smart-framework/src/main/java/me/crw/framework/utils/ClassUtil.java)，用来加载基础包下的所有类，比如使用了某注解的类，或者实现了某接口的类，再或者继承了某父类的所有子类等。
+
+我们的目标是在控制器类上使用Controller注解，在控制器类的方法上使用 Action 注解，在服务类上使用 Serivice注解，在控制器类中使用 Inject 注解将服务类依赖注入进来。因此我们需要自定义这4个注解类。
+
