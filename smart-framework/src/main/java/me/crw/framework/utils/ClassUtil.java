@@ -44,6 +44,9 @@ public final class ClassUtil {
 	public static Class<?> LoadClass(String className, boolean isInitialized) {
 		Class<?> cls;
 		try {
+			// 用指定的类加载器，加载指定名字的类并返回
+			// If the parameter loader is null, the class is loaded through the bootstrap class loader.
+			// The class is initialized only if the initialize parameter is true and if it has not been initialized earlier
 			cls = Class.forName(className, isInitialized, getClassLoader());
 		} catch (ClassNotFoundException e) {
 			LOGGER.error("load class failure", e);
@@ -65,18 +68,20 @@ public final class ClassUtil {
 				URL url = urls.nextElement();
 				if (url != null) {
 					String protocol = url.getProtocol();
-					if (protocol.equals("file")) {
+					if (protocol.equals("file")) { // 如果是文件
 						String packagePath = url.getPath().replaceAll("%20", " ");
 						addClass(classSet, packagePath, packageName);
-					} else if (protocol.equals("jar")) {
+					} else if (protocol.equals("jar")) {// 如果是jar包
+						// 通过JAR协议建立了一个访问 jar包URL的连接，可以访问这个jar包或者这个包里的某个文件
 						JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
 						if (jarURLConnection != null) {
-							JarFile jarFile = jarURLConnection.getJarFile();
-							if (jarFile != null) {
+							JarFile jarFile = jarURLConnection.getJarFile();//获取jarFile
+								if (jarFile != null) {
 								Enumeration<JarEntry> jarEntries = jarFile.entries();
 								while (jarEntries.hasMoreElements()) {
 									JarEntry jarEntry = jarEntries.nextElement();
 									String jarEntryName = jarEntry.getName();
+									// 加载jar包中的类
 									if (jarEntryName.endsWith(".class")) {
 										String className = jarEntryName.substring(0, jarEntryName.lastIndexOf(".")).replaceAll("/", ".");
 										doAddClass(classSet, className);
@@ -95,6 +100,7 @@ public final class ClassUtil {
 	}
 
 	private static void addClass(Set<Class<?>> classSet, String packagePath, String packageName) {
+		// 获取类
 		File[] files = new File(packagePath).listFiles(new FileFilter() {
 			public boolean accept(File file) {
 				return (file.isFile() && file.getName().endsWith(".class")) || file.isDirectory();
@@ -103,7 +109,7 @@ public final class ClassUtil {
 		for (File file : files) {
 			String fileName = file.getName();
 			if (file.isFile()) {
-				String className = fileName.substring(0, fileName.lastIndexOf("."));
+				String className = fileName.substring(0, fileName.lastIndexOf("."));//截取类名
 				if (StringUtil.isNotEmpty(packageName)) {
 					className = packageName + "." + className;
 				}
@@ -122,7 +128,7 @@ public final class ClassUtil {
 		}
 	}
 
-	private static void doAddClass(Set<Class<?>> classSet, String className) {
+	private static void doAddClass(Set<Class<?>> classSet, String className) {//加载类并添加到classSet中
 		Class<?> cls = LoadClass(className, false);
 		classSet.add(cls);
 	}
