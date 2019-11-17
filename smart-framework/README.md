@@ -136,7 +136,12 @@ public final class ConfigHelper {
 &emsp;我们需要[自定义一个类加载器](https://github.com/crwen/framework/blob/master/smart-framework/src/main/java/me/crw/framework/utils/ClassUtil.java)，用来加载基础包下的所有类，比如使用了某注解的类，或者实现了某接口的类，再或者继承了某父类的所有子类等。
 
 我们的目标是在控制器类上使用Controller注解，在控制器类的方法上使用 Action 注解，在服务类上使用 Serivice注解，在控制器类中使用 Inject 注解将服务类依赖注入进来。因此我们需要自定义这4个注解类。
+```java
+public @interface Controller {}
+public @interface Service {}
+public @interface Action {}
+public @interface Inject {}
+```
+由于我们需要通过配置文件的基础包名来获取包名下的所有类，所以我们有必要提供一个[帮助类](https://github.com/crwen/framework/blob/master/smart-framework/src/main/java/me/crw/framework/helper/ClassHelper.java)，让它分别获取应用包名下的所有类。此外，我们可以将带有Controller注解和Service注解的类所产生的对象理解为有框架所管理的Bean，所以有必要在帮助类中增加一个获取应用包名下所有Bean的方法。
 
-
-由于我们需要通过配置文件的基础包名来获取包名下的所有类，所以我们有必要提供一个[帮助类]，让它分别获取应用包名下的所有类。此外，我们可以将带有Controller注解和Service注解的类所产生的对象理解为有框架所管理的Bean，所以有必要在帮助类中增加一个获取应用包名下所有Bean的方法。
 
