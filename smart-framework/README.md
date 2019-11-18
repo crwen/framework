@@ -145,3 +145,34 @@ public @interface Inject {}
 由于我们需要通过配置文件的基础包名来获取包名下的所有类，所以我们有必要提供一个[帮助类](https://github.com/crwen/framework/blob/master/smart-framework/src/main/java/me/crw/framework/helper/ClassHelper.java)，让它分别获取应用包名下的所有类。此外，我们可以将带有Controller注解和Service注解的类所产生的对象理解为有框架所管理的Bean，所以有必要在帮助类中增加一个获取应用包名下所有Bean的方法。
 
 
+```java
+public final class BeanHelper {
+	/**
+	 *  定义 Bean 映射（用于存放Bean 类与 Bean 实例的映射关系）
+	 */
+	private static final Map<Class<?>, Object> BEAN_MAP = new HashMap<Class<?>, Object>();
+	
+	static {
+		Set<Class<?>> beanClassSet = ClassHelper.getBeanClassSet();
+		for (Class<?> beanClass : beanClassSet) {
+			Object obj = RelfectionUtil.newInstance(beanClass);
+			BEAN_MAP.put(beanClass, obj);
+		}
+	}
+	/**
+	 *  获取 Bean 映射
+	 * @return
+	 */
+	public static Map<Class<?>, Object> getBeanMap() {
+		return BEAN_MAP;
+	}
+	
+	public static <T>T getBean(Class<T> cls) {
+		if (!BEAN_MAP.containsKey(cls)) {
+			throw new RuntimeException("can not get bean by class: " + cls);
+		}
+		return (T) BEAN_MAP.get(cls);
+	}
+}
+
+```
