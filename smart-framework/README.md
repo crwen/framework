@@ -144,6 +144,8 @@ public @interface Inject {}
 ```
 由于我们需要通过配置文件的基础包名来获取包名下的所有类，所以我们有必要提供一个[帮助类](https://github.com/crwen/framework/blob/master/smart-framework/src/main/java/me/crw/framework/helper/ClassHelper.java)，让它分别获取应用包名下的所有类。此外，我们可以将带有Controller注解和Service注解的类所产生的对象理解为有框架所管理的Bean，所以有必要在帮助类中增加一个获取应用包名下所有Bean的方法。
 
+## 3.6 实现 Bean 容器
+&emsp;使用ClassHelper类可以获取所加载的类，但是无法的到实例化对象。因此，需要提供一个反射工具类，让它封装反射相关API，对外提供更好用的工具方法，以此来获取实例化对象。
 
 ```java
 public final class BeanHelper {
@@ -176,3 +178,21 @@ public final class BeanHelper {
 }
 
 ```
+
+## 3.7 实现依赖注入功能
+
+&emsp;**目的**: 在 Controller 定义 Service 成员变量，然后在 Controller 的 Action 方法中调用 Service 成员变量的方法
+
+&emsp;**问题**：如何实例化 Service 成员变量？
+
+&emsp;**思路**：
+
+&emsp;1. 通过 BeanHelper 获取所有 Bean Map（一个Map<Class<?>, Object>结构，记录了类与对象的映射关系）
+
+&emsp;2.遍历map，分别取出 Bean 类 和 Bean 实例，通过反射获取类中的所有成员变量
+
+&emsp;3. 继续遍历这些成员变量，判断当前成员变量是否带有 Inject 注解，若带有该注解，则从 Bean Map 中根据 Bean 类取出 Bean 实例。
+
+&emsp;4. 最后通过 ReflectionUtil#setField 方法来修改当前成员变量的值
+
+ 
