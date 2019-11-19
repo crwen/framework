@@ -1,4 +1,4 @@
-package me.crw.framework.helper;
+package me.crw.framework.bean;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
