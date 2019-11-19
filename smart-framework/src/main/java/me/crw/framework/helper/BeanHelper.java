@@ -34,10 +34,17 @@ public final class BeanHelper {
 	 *  获取 Bean 映射
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static Map<Class<?>, Object> getBeanMap() {
 		return BEAN_MAP;
 	}
 
+	/**
+	 *  获取 Bean 实例
+	 * @param cls
+	 * @param <T>
+	 * @return
+	 */
 	public static <T>T getBean(Class<T> cls) {
 		if (!BEAN_MAP.containsKey(cls)) {
 			throw new RuntimeException("can not get bean by class: " + cls);
