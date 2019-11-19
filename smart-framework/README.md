@@ -195,4 +195,12 @@ public final class BeanHelper {
 
 &emsp;4. 最后通过 ReflectionUtil#setField 方法来修改当前成员变量的值
 
+ ## 3.8 加载 Controller
+ &emsp;我们需要创建一个 ControllerHelper 类，让它来处理如下逻辑：
+ - 获取所有定义了 Controller 注解的类
+ - 通过反射获取该类中所有带 Action 注解的方法
+ - 获取 Action 注解中的请求表达式，进而获取请求方法与请求路径
+ - 封装一个请求对象（Request）与处理对象（Handler）
+ - 将 Request 与 Handler 建立一个映射关系，放入一个 Action Map 中，并提供一个可根据请求方法与请求路径获取处理对象的方法
+ 
  
