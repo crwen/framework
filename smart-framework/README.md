@@ -207,3 +207,16 @@ public final class BeanHelper {
  
  &emsp;我们之前创建了 ClassHelper、BeanHelper、IocHelper、ControllerHelper，现在我们需要一个入口程序来加载他们。
  
+ ## 3.10 请求转发器
+ 
+&emsp;帮助类和工具类都写完了，现在，我们需要编写一个Servlet，让它来处理所有的请求。
+思路：
+- &emsp;从HttpServletRequest 对象获取请求方法与请求路径，通过 ControllerHelper#getHandler 方法来获取 Handler 对象。
+- 拿到 Handler 对象后，获取 Controller 对象，进而通过 BeanHelper.getBean 方法获取 Controller 的实例对象。
+- 从 HttpServletRequest 对象中获取所有请求参数，并将其初始化到一个名为 Param 的对象中
+
+Param类实现：
+- 有一些类get 方法，可通过参数名获取指定类型的参数值，也可以获取所有参数的 Map 结构。
+- 可以从 Handler 对象中获取 Action 的方法返回值，该返回值有两种情况：
+  - 返回值是 View 类型的视图对象，返回一个 JSP 页面
+  - 返回值是 Data类型的数据对象，返回一个 JSON 数据。
