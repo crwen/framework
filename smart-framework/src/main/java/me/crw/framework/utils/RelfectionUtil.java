@@ -36,7 +36,7 @@ public class RelfectionUtil {
 	}
 
 	/**
-	 *  第哦啊用方法
+	 *  调用方法
 	 * @param obj
 	 * @param method
 	 * @param args
