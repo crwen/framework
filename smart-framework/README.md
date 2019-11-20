@@ -203,4 +203,7 @@ public final class BeanHelper {
  - 封装一个请求对象（Request）与处理对象（Handler）
  - 将 Request 与 Handler 建立一个映射关系，放入一个 Action Map 中，并提供一个可根据请求方法与请求路径获取处理对象的方法
  
+ ## 3.9 初始化框架
+ 
+ &emsp;我们之前创建了 ClassHelper、BeanHelper、IocHelper、ControllerHelper，现在我们需要一个入口程序来加载他们。
  

@@ -41,7 +41,7 @@ public final class ClassUtil {
 	 * @param isInitialized 是否初始化的标志（是否执行类的静态代码块）
 	 * @return
 	 */
-	public static Class<?> LoadClass(String className, boolean isInitialized) {
+	public static Class<?> loadClass(String className, boolean isInitialized) {
 		Class<?> cls;
 		try {
 			// 用指定的类加载器，加载指定名字的类并返回
@@ -53,6 +53,10 @@ public final class ClassUtil {
 			throw new RuntimeException(e);
 		}
 		return cls;
+	}
+
+	public static void loadClass(String className) {
+		loadClass(className, false);
 	}
 
 	/**
@@ -129,7 +133,7 @@ public final class ClassUtil {
 	}
 
 	private static void doAddClass(Set<Class<?>> classSet, String className) {//加载类并添加到classSet中
-		Class<?> cls = LoadClass(className, false);
+		Class<?> cls = loadClass(className, false);
 		classSet.add(cls);
 	}
 
