@@ -9,6 +9,7 @@ framework
 │  └─Service -- Service层注解
 ├─bean -- bena对象
 ├─helper -- 帮助类
-└─utils -- 工具类及通用代码
-
+├─utils -- 工具类及通用代码
+├─ConfigConstant -- 提供相关配置项常量
+└─
 ```
