@@ -13,3 +13,20 @@ framework
 ├─ConfigConstant -- 提供相关配置项常量
 └─
 ```
+
+### 配置文件
+smart.properties 示例
+```properties
+# 数据库连接配置信息
+smart.framework.jdbc.driver = com.mysql.jdbc.Driver
+smart.framework.jdbc.url = jdbc:mysql://localhost:3306/数据库
+smart.framework.jdbc.username = 用户名
+smart.framework.jdbc.password = 密码
+
+# 项目基础包名
+smart.framework.app.base_package = 项目基础包名
+# JSP基础路径
+smart.framework.app.jsp_path = /WEB-INF/view/
+# 静态资源文件基础路径（js、css、图片等）
+smart.framework.app.asset_path = /asset/
+```
