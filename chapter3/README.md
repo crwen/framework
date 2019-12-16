@@ -144,6 +144,47 @@ public @interface Inject {}
 ```
 由于我们需要通过配置文件的基础包名来获取包名下的所有类，所以我们有必要提供一个[帮助类](https://github.com/crwen/framework/blob/master/smart-framework/src/main/java/me/crw/framework/helper/ClassHelper.java)，让它分别获取应用包名下的所有类。此外，我们可以将带有Controller注解和Service注解的类所产生的对象理解为有框架所管理的Bean，所以有必要在帮助类中增加一个获取应用包名下所有Bean的方法。
 
+```java
+	public final class ClassHelper {
+    	private static final Set<Class<?>> CLASS_SET;
+    	static {
+    		String basePackage = ConfigHelper.getAppBasePackage();
+    		CLASS_SET = ClassUtil.getClassSet(basePackage);
+    	}
+    	/**
+    	 * 获取应用包名下的所有类
+    	 * @return
+    	 */
+    	public static Set<Class<?>> getClassSet() {
+    		return CLASS_SET;
+    	}
+    	/**
+    	 *  获取应用包名下所有 Controller 类
+    	 * @return
+    	 */
+    	public static Set<Class<?>> getControllerClassSet() {
+    		Set<Class<?>> classSet = new HashSet<Class<?>>();
+    		for (Class<?> cls : CLASS_SET) {
+    			if (cls.isAnnotationPresent(Controller.class)) {
+    				classSet.add(cls);
+    			}
+    		}
+    		return classSet;
+    	}
+    	/**
+    	 *  获取应用包名下所有 Bean 类 （包括：Service、Controller 等）
+    	 * @return
+    	 */
+    	public static Set<Class<?>> getBeanClassSet() {
+    		Set<Class<?>> beanClassSet = new HashSet<Class<?>>();
+    		beanClassSet.addAll(getServiceClassSet());
+    		beanClassSet.addAll(getControllerClassSet());
+    		return beanClassSet;
+    	}
+    }
+
+```
+
 ## 3.6 实现 Bean 容器
 &emsp;使用ClassHelper类可以获取所加载的类，但是无法的到实例化对象。因此，需要提供一个反射工具类，让它封装反射相关API，对外提供更好用的工具方法，以此来获取实例化对象。
 
