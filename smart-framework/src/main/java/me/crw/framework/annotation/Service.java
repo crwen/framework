@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * @since JDK 1.8
  */
 
-@Target(ElementType.TYPE)
+@Target(ElementType.TYPE) // 描述类、接口或enum声明
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Service {
 

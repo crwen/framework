@@ -15,8 +15,8 @@ import java.lang.annotation.Target;
  * @since JDK 1.8
  */
 
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD) // 用于描述域
+@Retention(RetentionPolicy.RUNTIME) // 运行时有效
 public @interface Inject {
 
 }
