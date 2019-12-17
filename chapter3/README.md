@@ -189,12 +189,55 @@ public @interface Inject {}
 &emsp;使用ClassHelper类可以获取所加载的类，但是无法的到实例化对象。因此，需要提供一个反射工具类，让它封装反射相关API，对外提供更好用的工具方法，以此来获取实例化对象。
 
 ```java
-public final class BeanHelper {
+public class RelfectionUtil {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(RelfectionUtil.class);
+
+	public static Object newInstance(Class<?> cls) {
+		Object instance;
+		try {
+			instance = cls.newInstance();
+		} catch (Exception e) {
+			LOGGER.error("new instance failure", e);
+			throw new RuntimeException(e);
+		}
+		return instance;
+	}
+
 	/**
-	 *  定义 Bean 映射（用于存放Bean 类与 Bean 实例的映射关系）
+	 *  调用方法
 	 */
+	public static Object invokeMethod(Object obj, Method method, Object ... args) {
+		Object result;
+		try {
+			method.setAccessible(true);
+			result = method.invoke(obj, args);
+		} catch (Exception e) {
+			LOGGER.error("invoke method failure", e);
+			throw new RuntimeException(e);
+		}
+		return result;
+	}
+
+	/**
+	 *  设置成员变量
+	 */
+	public static void setField(Object obj, Field field, Object value) {
+		try {
+			field.setAccessible(true);
+			field.set(obj, value);
+		} catch (IllegalAccessException e) {
+			LOGGER.error("set field failure", e);
+			throw new RuntimeException(e);
+		}
+	}
+}
+```
+
+&emsp;我们需要获取所有被框架管理的Bean类，所以我们需要一个帮助类来让我们随时能够获取对应的类
+```java
+public final class BeanHelper {
 	private static final Map<Class<?>, Object> BEAN_MAP = new HashMap<Class<?>, Object>();
-	
 	static {
 		Set<Class<?>> beanClassSet = ClassHelper.getBeanClassSet();
 		for (Class<?> beanClass : beanClassSet) {
@@ -251,6 +294,7 @@ public final class BeanHelper {
  ## 3.10 请求转发器
  
 &emsp;帮助类和工具类都写完了，现在，我们需要编写一个Servlet，让它来处理所有的请求。
+
 思路：
 - &emsp;从HttpServletRequest 对象获取请求方法与请求路径，通过 ControllerHelper#getHandler 方法来获取 Handler 对象。
 - 拿到 Handler 对象后，获取 Controller 对象，进而通过 BeanHelper.getBean 方法获取 Controller 的实例对象。

@@ -13,6 +13,36 @@ framework
 ├─ConfigConstant -- 提供相关配置项常量
 └─
 ```
+**一些帮助类解释：**
+
+- ClassHelper：获取加载过的类
+
+  - getClassSet()：获取应用包下所有类
+  
+  - getServiceClassSet()：获取应用包名下所有 Service 类
+  
+  - getControllerClassSet()：获取应用包名下所有 Controller 类
+  
+  - getBeanClassSet()：获取应用包名下所有 Bean 类 （包括：Service、Controller 等）
+
+- BeanHelper：获取并管理实例化对象
+
+  - getBeanMap()：获取所有实例化对象
+  
+  - getBean(Class<T> cls)：获取相应类的实例化对象
+
+**一些工具类解释**
+
+- PropsUtil：加载配置文件
+- ClassUtil：加载类
+- RefelectionUtil：通过反射实例化对象
+
+  - newInstance(Class<?> cls)：实例化对象
+  
+  - invokeMethod(Object obj, Method method, Object ... args)：调用对应对象的方法
+  
+  - setField(Object obj, Field field, Object value)：给对应对象的对应属性赋值
+
 
 ### 配置文件
 smart.properties 示例
